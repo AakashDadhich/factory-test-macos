@@ -6,7 +6,7 @@ options:
 packages:
   Logging:
     url: https://github.com/apple/swift-log
-    exactVersion: 1.16.2
+    exactVersion: 1.6.3
 targets:
   FactoryTestMacOS:
     type: application
