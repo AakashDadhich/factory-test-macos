@@ -1,0 +1,35 @@
+name: FactoryTestMacOS
+options:
+  bundleIdPrefix: dev.aakashdadhich.factory
+  deploymentTarget:
+    macOS: "14.0"
+packages:
+  Logging:
+    url: https://github.com/apple/swift-log
+    exactVersion: 1.16.2
+targets:
+  FactoryTestMacOS:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+    dependencies:
+      - package: Logging
+        product: Logging
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.aakashdadhich.factory.FactoryTestMacOS
+        ENABLE_HARDENED_RUNTIME: YES
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_ENTITLEMENTS: Config/FactoryTestMacOS.entitlements
+        INFOPLIST_KEY_CFBundleDisplayName: FactoryTestMacOS
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+schemes:
+  FactoryTestMacOS:
+    build:
+      targets:
+        FactoryTestMacOS: all
