@@ -1,0 +1,19 @@
+{
+  "run_id": "41124575060",
+  "mode": "check",
+  "ref": "refs/heads/main",
+  "commit": "c1dcaab0c6751ce7d46b7e993087353499cff8c8",
+  "status": "fail",
+  "counts": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 1,
+    "info": 5
+  },
+  "blocking_fingerprints": [
+    "3bdaed5a89283444f450cc6e7e40a8251219ecd754196522081ef2daa69b8047"
+  ],
+  "iteration": 0,
+  "issue": null
+}
