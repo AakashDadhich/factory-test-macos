@@ -1,0 +1,19 @@
+{
+  "run_id": "41143988347",
+  "mode": "check",
+  "ref": "refs/heads/scratch/sandbox-off",
+  "commit": "86813eb12d25701ecbe26d0a360d77c5fb04d3e9",
+  "status": "fail",
+  "counts": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 0,
+    "info": 0
+  },
+  "blocking_fingerprints": [
+    "ec0ae1757e1359fd9c3eabb9bc7baa47e8de4e3be1e33fda3fa91ac428eb851f"
+  ],
+  "iteration": 0,
+  "issue": null
+}
