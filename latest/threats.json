@@ -1,0 +1,185 @@
+{
+  "model_version": "2301b5bf64496f625c2d34b004d18f46ba4b5486b18d7b6cad802183d4c97f6c",
+  "threats": [
+    {
+      "id": "TM-001",
+      "framework": "stride",
+      "category": "tampering",
+      "element": "Enter name",
+      "title": "Untrusted typed name could inject content into the greeting or log",
+      "description": "The typed name is free text. Control characters, very long strings or format characters could reach the greeting text or the log line. The app validates it before use: Greeting.message trims the input and accepts it only if it has 40 characters or fewer and every character is a letter. Any other input gets the generic greeting.",
+      "likelihood": "low",
+      "impact": "low",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-001-M1",
+          "text": "Allow-list validation of the name (letters only, at most 40 characters) before it is used in the greeting, with a generic fallback for anything else.",
+          "asvs_refs": [
+            "V2.2.1",
+            "V1.3.1"
+          ]
+        }
+      ],
+      "status": "mitigated",
+      "evidence": "Sources/Greeting.swift"
+    },
+    {
+      "id": "TM-002",
+      "framework": "stride",
+      "category": "information-disclosure",
+      "element": "Write debug log",
+      "title": "Typed name could leak into the debug log",
+      "description": "The typed name is personal data. If it were written to the debug log, other local processes or diagnostics collection could read it. The code logs only the constant message 'name changed' and never the value.",
+      "likelihood": "low",
+      "impact": "medium",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-002-M1",
+          "text": "Never write user-entered values to logs. Log constant event text only, and keep a review check for this.",
+          "asvs_refs": [
+            "V14.1.1",
+            "V16.2.5"
+          ]
+        }
+      ],
+      "status": "mitigated",
+      "evidence": "Sources/ContentView.swift"
+    },
+    {
+      "id": "TM-003",
+      "framework": "stride",
+      "category": "repudiation",
+      "element": "Debug log",
+      "title": "Debug log is not a reliable audit record",
+      "description": "The debug log holds only debug-level 'name changed' lines. It has no integrity protection and no user attribution. The app has no security-relevant actions to audit, so a user denying an action is a low risk. Nobody should rely on this log as evidence.",
+      "likelihood": "low",
+      "impact": "low",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-003-M1",
+          "text": "Document that the debug log is diagnostic only and not an audit trail. Add timestamps and structured fields if auditing is ever needed.",
+          "asvs_refs": [
+            "V16.2.1",
+            "V16.3.1"
+          ]
+        }
+      ],
+      "status": "open"
+    },
+    {
+      "id": "TM-004",
+      "framework": "stride",
+      "category": "tampering",
+      "element": "Debug log",
+      "title": "Local user or process could alter or fill the debug log",
+      "description": "Logs written to the user's device can be edited or deleted by the user or by other processes running as that user. They could also be filled up. Because the log is only diagnostic, the impact is limited.",
+      "likelihood": "low",
+      "impact": "low",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-004-M1",
+          "text": "Write logs through the system logging facility (os_log or swift-log's OSLog backend) rather than a custom world-writable file. Keep the log level and volume bounded.",
+          "asvs_refs": [
+            "V16.4.2",
+            "V16.4.3"
+          ]
+        }
+      ],
+      "status": "open"
+    },
+    {
+      "id": "TM-005",
+      "framework": "stride",
+      "category": "denial-of-service",
+      "element": "Greeting app",
+      "title": "Excessive input or rapid edits could exhaust the app",
+      "description": "A very large pasted string would be processed on every keystroke, and each change writes a log line. Greeting validation rejects names over 40 characters only after the full string is processed. The TextField itself does not cap the length. This could make the UI slow or the log grow.",
+      "likelihood": "low",
+      "impact": "low",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-005-M1",
+          "text": "Cap the field length at the input, not only in Greeting.message. Keep the per-change work and logging bounded.",
+          "asvs_refs": [
+            "V2.2.1",
+            "V16.5.2"
+          ]
+        }
+      ],
+      "status": "open"
+    },
+    {
+      "id": "TM-006",
+      "framework": "stride",
+      "category": "elevation-of-privilege",
+      "element": "App sandbox",
+      "title": "Sandbox entitlements could be widened beyond need",
+      "description": "The app relies on the macOS App Sandbox. If entitlements for network, file access or similar are added later, a bug in the app could be abused for more access than the offline greeting needs.",
+      "likelihood": "low",
+      "impact": "medium",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-006-M1",
+          "text": "Keep App Sandbox enabled with a minimal entitlement set and no network or user-file access. Review entitlement changes in code review.",
+          "asvs_refs": [
+            "V13.4.7",
+            "V15.3.1"
+          ]
+        }
+      ],
+      "status": "mitigated",
+      "evidence": "Config/FactoryTestMacOS.entitlements"
+    },
+    {
+      "id": "TM-007",
+      "framework": "stride",
+      "category": "spoofing",
+      "element": "Show greeting",
+      "title": "Tampered or replaced app binary could show misleading output",
+      "description": "The greeting is drawn in-process, so there is no network channel to spoof. The remaining risk is a modified or unsigned build presenting false content, or a malicious dependency (swift-log) doing the same.",
+      "likelihood": "low",
+      "impact": "low",
+      "severity": "low",
+      "mitigations": [
+        {
+          "id": "TM-007-M1",
+          "text": "Sign and notarise release builds. Pin dependency versions (swift-log is pinned to 1.6.3) and keep the lock file in version control.",
+          "asvs_refs": [
+            "V15.1.1",
+            "V15.2.1"
+          ]
+        }
+      ],
+      "status": "open"
+    },
+    {
+      "id": "TM-008",
+      "framework": "stride",
+      "category": "tampering",
+      "element": "Greeting app",
+      "title": "CI workflow reference to the factory could be altered",
+      "description": "The diff changes the reusable factory workflow reference from @main to @v1 and sets factory-ref to v1. A movable tag could be re-pointed to run untrusted code in CI with inherited secrets ('secrets: inherit'). The workflow also suppresses the unpinned-uses lint.",
+      "likelihood": "low",
+      "impact": "high",
+      "severity": "medium",
+      "mitigations": [
+        {
+          "id": "TM-008-M1",
+          "text": "Pin the reusable workflow to a full commit SHA instead of a movable tag. Limit inherited secrets to those needed and protect the tag in the factory repository.",
+          "asvs_refs": [
+            "V15.2.1",
+            "V13.3.1"
+          ]
+        }
+      ],
+      "status": "open"
+    }
+  ],
+  "removed": []
+}

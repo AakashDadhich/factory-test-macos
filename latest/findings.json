@@ -1,0 +1,172 @@
+[
+  {
+    "id": "review:875f7ef0719686461c7448049aa7fa00cf3ca2a61a6324f55429311826698a6e",
+    "stage": "review",
+    "tool": "claude-code",
+    "source": "ai-review",
+    "rule_id": "review-cwe-829",
+    "title": "Reusable workflow pinned to a mutable tag while inheriting all secrets",
+    "severity": "info",
+    "location": {
+      "path": ".github/workflows/factory.yml",
+      "start_line": 24,
+      "end_line": 31
+    },
+    "cwe": [
+      "CWE-829"
+    ],
+    "description": "The reusable workflow is referenced by the mutable tag `v1` instead of a commit SHA, and `secrets: inherit` passes every repository secret to it. If the `v1` tag is moved or the upstream repo is compromised, the code that runs would receive all secrets. The `factory-ref: v1` input is also mutable. This is an improvement over `@main`, so the residual risk is limited.\nDowngraded to info: lines 24-31 are outside the changed hunks and their context.\n(confidence low)",
+    "remediation": "Pin both the `uses:` reference and `factory-ref` to a full commit SHA. Replace `secrets: inherit` with an explicit list of the secrets the workflow needs.",
+    "fingerprint": "875f7ef0719686461c7448049aa7fa00cf3ca2a61a6324f55429311826698a6e",
+    "tools": [
+      "claude-code"
+    ],
+    "stages": [
+      "review"
+    ],
+    "merged_fingerprints": [
+      "875f7ef0719686461c7448049aa7fa00cf3ca2a61a6324f55429311826698a6e"
+    ],
+    "suppressed": false
+  },
+  {
+    "id": "threat-model:0635809503d1541b2220be9f9d8351d396bf3191e32a337d772e9df3831ad618",
+    "stage": "threat-model",
+    "tool": "threat-model",
+    "source": "ai-threat-model",
+    "rule_id": "TM-005",
+    "title": "Denial of service: Excessive input or rapid edits could exhaust the app",
+    "severity": "info",
+    "location": {
+      "path": "security/threats.json",
+      "start_line": null,
+      "end_line": null
+    },
+    "cwe": [],
+    "description": "A very large pasted string would be processed on every keystroke, and each change writes a log line. Greeting validation rejects names over 40 characters only after the full string is processed. The TextField itself does not cap the length. This could make the UI slow or the log grow.\n\nFramework stride, element 'Greeting app', likelihood low, impact low, rated low.",
+    "remediation": "- Cap the field length at the input, not only in Greeting.message. Keep the per-change work and logging bounded. (ASVS V2.2.1, V16.5.2)",
+    "fingerprint": "0635809503d1541b2220be9f9d8351d396bf3191e32a337d772e9df3831ad618",
+    "tools": [
+      "threat-model"
+    ],
+    "stages": [
+      "threat-model"
+    ],
+    "merged_fingerprints": [
+      "0635809503d1541b2220be9f9d8351d396bf3191e32a337d772e9df3831ad618"
+    ],
+    "suppressed": false
+  },
+  {
+    "id": "threat-model:39c788d470903ebfd50f5e66d81fc3c780e0e99491d85ed5e45128fea989261f",
+    "stage": "threat-model",
+    "tool": "threat-model",
+    "source": "ai-threat-model",
+    "rule_id": "TM-008",
+    "title": "Tampering: CI workflow reference to the factory could be altered",
+    "severity": "info",
+    "location": {
+      "path": "security/threats.json",
+      "start_line": null,
+      "end_line": null
+    },
+    "cwe": [],
+    "description": "The diff changes the reusable factory workflow reference from @main to @v1 and sets factory-ref to v1. A movable tag could be re-pointed to run untrusted code in CI with inherited secrets ('secrets: inherit'). The workflow also suppresses the unpinned-uses lint.\n\nFramework stride, element 'Greeting app', likelihood low, impact high, rated medium.",
+    "remediation": "- Pin the reusable workflow to a full commit SHA instead of a movable tag. Limit inherited secrets to those needed and protect the tag in the factory repository. (ASVS V15.2.1, V13.3.1)",
+    "fingerprint": "39c788d470903ebfd50f5e66d81fc3c780e0e99491d85ed5e45128fea989261f",
+    "tools": [
+      "threat-model"
+    ],
+    "stages": [
+      "threat-model"
+    ],
+    "merged_fingerprints": [
+      "39c788d470903ebfd50f5e66d81fc3c780e0e99491d85ed5e45128fea989261f"
+    ],
+    "suppressed": false
+  },
+  {
+    "id": "threat-model:75bc1a782044673117998ff1863ba59dc648e0a36fbe7515edcd1dd316353f27",
+    "stage": "threat-model",
+    "tool": "threat-model",
+    "source": "ai-threat-model",
+    "rule_id": "TM-007",
+    "title": "Spoofing: Tampered or replaced app binary could show misleading output",
+    "severity": "info",
+    "location": {
+      "path": "security/threats.json",
+      "start_line": null,
+      "end_line": null
+    },
+    "cwe": [],
+    "description": "The greeting is drawn in-process, so there is no network channel to spoof. The remaining risk is a modified or unsigned build presenting false content, or a malicious dependency (swift-log) doing the same.\n\nFramework stride, element 'Show greeting', likelihood low, impact low, rated low.",
+    "remediation": "- Sign and notarise release builds. Pin dependency versions (swift-log is pinned to 1.6.3) and keep the lock file in version control. (ASVS V15.1.1, V15.2.1)",
+    "fingerprint": "75bc1a782044673117998ff1863ba59dc648e0a36fbe7515edcd1dd316353f27",
+    "tools": [
+      "threat-model"
+    ],
+    "stages": [
+      "threat-model"
+    ],
+    "merged_fingerprints": [
+      "75bc1a782044673117998ff1863ba59dc648e0a36fbe7515edcd1dd316353f27"
+    ],
+    "suppressed": false
+  },
+  {
+    "id": "threat-model:792812d79293d09aef7aa5c13118b3b330768ea45eca80bafd8130143c034b2e",
+    "stage": "threat-model",
+    "tool": "threat-model",
+    "source": "ai-threat-model",
+    "rule_id": "TM-004",
+    "title": "Tampering: Local user or process could alter or fill the debug log",
+    "severity": "info",
+    "location": {
+      "path": "security/threats.json",
+      "start_line": null,
+      "end_line": null
+    },
+    "cwe": [],
+    "description": "Logs written to the user's device can be edited or deleted by the user or by other processes running as that user. They could also be filled up. Because the log is only diagnostic, the impact is limited.\n\nFramework stride, element 'Debug log', likelihood low, impact low, rated low.",
+    "remediation": "- Write logs through the system logging facility (os_log or swift-log's OSLog backend) rather than a custom world-writable file. Keep the log level and volume bounded. (ASVS V16.4.2, V16.4.3)",
+    "fingerprint": "792812d79293d09aef7aa5c13118b3b330768ea45eca80bafd8130143c034b2e",
+    "tools": [
+      "threat-model"
+    ],
+    "stages": [
+      "threat-model"
+    ],
+    "merged_fingerprints": [
+      "792812d79293d09aef7aa5c13118b3b330768ea45eca80bafd8130143c034b2e"
+    ],
+    "suppressed": false
+  },
+  {
+    "id": "threat-model:c2e9633366a746b793bace4f786e2bdcd9e93fd8f295b803b988702b45f9581a",
+    "stage": "threat-model",
+    "tool": "threat-model",
+    "source": "ai-threat-model",
+    "rule_id": "TM-003",
+    "title": "Repudiation: Debug log is not a reliable audit record",
+    "severity": "info",
+    "location": {
+      "path": "security/threats.json",
+      "start_line": null,
+      "end_line": null
+    },
+    "cwe": [],
+    "description": "The debug log holds only debug-level 'name changed' lines. It has no integrity protection and no user attribution. The app has no security-relevant actions to audit, so a user denying an action is a low risk. Nobody should rely on this log as evidence.\n\nFramework stride, element 'Debug log', likelihood low, impact low, rated low.",
+    "remediation": "- Document that the debug log is diagnostic only and not an audit trail. Add timestamps and structured fields if auditing is ever needed. (ASVS V16.2.1, V16.3.1)",
+    "fingerprint": "c2e9633366a746b793bace4f786e2bdcd9e93fd8f295b803b988702b45f9581a",
+    "tools": [
+      "threat-model"
+    ],
+    "stages": [
+      "threat-model"
+    ],
+    "merged_fingerprints": [
+      "c2e9633366a746b793bace4f786e2bdcd9e93fd8f295b803b988702b45f9581a"
+    ],
+    "suppressed": false
+  }
+]

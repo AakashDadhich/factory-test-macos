@@ -1,0 +1,22 @@
+[
+  {
+    "id": "review:875f7ef0719686461c7448049aa7fa00cf3ca2a61a6324f55429311826698a6e",
+    "stage": "review",
+    "tool": "claude-code",
+    "source": "ai-review",
+    "rule_id": "review-cwe-829",
+    "title": "Reusable workflow pinned to a mutable tag while inheriting all secrets",
+    "severity": "info",
+    "location": {
+      "path": ".github/workflows/factory.yml",
+      "start_line": 24,
+      "end_line": 31
+    },
+    "cwe": [
+      "CWE-829"
+    ],
+    "description": "The reusable workflow is referenced by the mutable tag `v1` instead of a commit SHA, and `secrets: inherit` passes every repository secret to it. If the `v1` tag is moved or the upstream repo is compromised, the code that runs would receive all secrets. The `factory-ref: v1` input is also mutable. This is an improvement over `@main`, so the residual risk is limited.\nDowngraded to info: lines 24-31 are outside the changed hunks and their context.\n(confidence low)",
+    "remediation": "Pin both the `uses:` reference and `factory-ref` to a full commit SHA. Replace `secrets: inherit` with an explicit list of the secrets the workflow needs.",
+    "fingerprint": "875f7ef0719686461c7448049aa7fa00cf3ca2a61a6324f55429311826698a6e"
+  }
+]
